@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -9,7 +10,15 @@ import (
 	"strings"
 )
 
+var VERSION = "v1.1.0"
+
 func main() {
+	versionPtr := flag.Bool("v", false, "version")
+	flag.Parse()
+	if *versionPtr {
+		version()
+		return
+	}
 	inModules := checkIfInModules()
 	if inModules == false {
 		fmt.Println("Modulesearch must be run within a puppet modules root directory.")
@@ -77,4 +86,9 @@ func checkIfInModules() bool {
 	} else {
 		return false
 	}
+}
+
+func version() {
+	fmt.Println("Modulesearch version:  " + VERSION)
+	return
 }
