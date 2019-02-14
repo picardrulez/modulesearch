@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -38,7 +39,7 @@ func getContents(path string) []string {
 	return files
 }
 
-func hasString(file string, grep string) bool {
+func hasString(file string, grep string) (bool, string) {
 	f, err := os.Open(file)
 	if err != nil {
 		log.Println(err)
@@ -48,11 +49,12 @@ func hasString(file string, grep string) bool {
 	line := 1
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), grep) {
-			return true
+			returnLine := strconv.Itoa(line) + ":" + scanner.Text()
+			return true, returnLine
 		}
 		line++
 	}
-	return false
+	return false, "err"
 }
 
 func checkModule(module string, grep string) {
@@ -60,10 +62,11 @@ func checkModule(module string, grep string) {
 	var filesWithString []string
 	manifestList := getContents(wd + "/" + module + "/manifests/*")
 	for _, s := range manifestList {
-		containsString := hasString(s, grep)
+		containsString, text := hasString(s, grep)
 		if containsString {
 			filesWithString = append(filesWithString, s)
 			fmt.Println(s)
+			fmt.Println(text)
 		}
 
 	}
