@@ -11,10 +11,13 @@ import (
 	"strings"
 )
 
-var VERSION = "v1.1.0"
+var VERSION = "v1.2"
+var versionPtr = flag.Bool("v", false, "version")
+var linePtr = flag.Bool("l", false, "line")
+var modulePtr = flag.Bool("m", false, "module")
+var fullPtr = flag.Bool("f", false, "full path")
 
 func main() {
-	versionPtr := flag.Bool("v", false, "version")
 	flag.Parse()
 	if *versionPtr {
 		version()
@@ -61,12 +64,30 @@ func checkModule(module string, grep string) {
 	wd := pwd()
 	var filesWithString []string
 	manifestList := getContents(wd + "/" + module + "/manifests/*")
+	found := false
 	for _, s := range manifestList {
+		fileslice := strings.Split(s, "/")
+		shortfile4 := fileslice[len(fileslice)-4]
+		shortfile3 := fileslice[len(fileslice)-3]
+		shortfile2 := fileslice[len(fileslice)-2]
+		shortfile1 := fileslice[len(fileslice)-1]
+		shortfile := shortfile4 + "/" + shortfile3 + "/" + shortfile2 + "/" + shortfile1
 		containsString, text := hasString(s, grep)
 		if containsString {
 			filesWithString = append(filesWithString, s)
-			fmt.Println(s)
-			fmt.Println(text)
+			if *modulePtr {
+				if found == false {
+					fmt.Println(module)
+				}
+			} else if *fullPtr {
+				fmt.Println(s)
+			} else {
+				fmt.Println(shortfile)
+			}
+			if *linePtr {
+				fmt.Println(text)
+			}
+			found = true
 		}
 
 	}
