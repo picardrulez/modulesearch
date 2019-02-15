@@ -1,0 +1,26 @@
+.TH modulesearch 8 "02/14/2019" "version 1.1" "modulesearch manpage"
+.SH NAME
+modulesearch - search text in puppet module manifests for keyword
+.SH SYNOPSIS
+.B modulesearch
+.RI "[" OPTION "]"
+.B keyword
+.SH DESCRIPTION
+.B modulesearch
+is a golang application that searches for a keyword through the manifests of all puppet modules. The command must be run from a puppet modules root diretory.
+.SH OPTIONS
+.TP
+.B -m
+Prints only the module name of modules that contain the keyword.
+.TP
+.B -f
+Prints the full path of each manifest that contains the keyword.
+.TP
+.B -l
+Prints the lines containing the keyword preceded by the line number.
+.B -v
+Prints the version number.
+.SH AUTHOR
+Geoff Scott (picardrulez@gmail.com)
+.SH COPYRIGHT
+gpl v3.0
